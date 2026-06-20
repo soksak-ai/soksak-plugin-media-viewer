@@ -1,0 +1,24 @@
+{
+  "spec": "soksak-plugin-spec@1",
+  "id": "soksak-plugin-media-viewer",
+  "name": {
+    "ko": "미디어 뷰어",
+    "en": "Media Viewer"
+  },
+  "version": "0.1.0",
+  "repo": "https://github.com/soksak-ai/soksak-plugin-media-viewer.git",
+  "description": {
+    "ko": "이미지·PDF·영상·오디오 파일을 콘텐츠로 표시하는 뷰어. soksak 파일 뷰어로 등록(코어가 확장자로 라우팅).",
+    "en": "Viewers for image, PDF, video, and audio files. Registers as soksak file viewers (the core routes by extension)."
+  },
+  "entry": "main.js",
+  "permissions": ["ui", "fs:read"],
+  "contributes": {
+    "fileViewers": [
+      { "id": "image", "extensions": ["png", "jpg", "jpeg", "gif", "webp", "bmp", "ico", "avif", "apng"], "priority": 10 },
+      { "id": "pdf", "extensions": ["pdf"], "priority": 10 },
+      { "id": "video", "extensions": ["mp4", "webm", "mov", "m4v", "ogv", "mkv"], "priority": 10 },
+      { "id": "audio", "extensions": ["mp3", "wav", "ogg", "flac", "m4a", "aac"], "priority": 10 }
+    ]
+  }
+}
