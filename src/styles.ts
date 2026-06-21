@@ -9,9 +9,9 @@ export const GLOBAL_CSS = `
   overflow: auto;
   padding: 16px;
   background: var(--bg, #1e1e1e);
-  color: var(--text-2, #bbb);
+  color: var(--fg2, #bbb);
 }
 .sk-mv-img { max-width: 100%; max-height: 100%; object-fit: contain; }
 .sk-mv-embed, .sk-mv-video { width: 100%; height: 100%; border: 0; }
-.sk-mv-msg { color: var(--text-3, #888); font-size: 13px; }
+.sk-mv-msg { color: var(--fg3, #888); font-size: 13px; }
 `;
