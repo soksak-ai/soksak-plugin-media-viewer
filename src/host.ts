@@ -32,7 +32,8 @@ export interface PluginApi {
     ) => Disposable;
   };
   fs?: {
-    readBinary?: (path: string) => Promise<{ mime: string; base64: string }>;
+    /** 로컬 파일 → webview 로드 가능 URL(코어 표준). 같은 path 멱등. "fs:read" 게이트. */
+    url?: (path: string) => Promise<string>;
   };
 }
 

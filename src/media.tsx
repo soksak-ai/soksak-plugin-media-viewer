@@ -1,4 +1,5 @@
-// 미디어 뷰어 — 이미지/PDF/영상/오디오. app.fs.readBinary → data URL 렌더(읽기 전용 — dirty 없음).
+// 미디어 뷰어 — 이미지/PDF/영상/오디오. 코어 표준 app.fs.url 로 webview 로드 URL(blob) 렌더(읽기 전용 —
+// dirty 없음). data URL 인라인이 아니라 blob URL 이라 영상/오디오 seek 가능 + 같은 path 멱등.
 // 코드/텍스트는 에디터 플러그인 몫(이 플러그인은 정확 확장자로 미디어만 가져간다).
 import { useEffect, useState } from "react";
 import { t as translate } from "./i18n";
@@ -23,14 +24,14 @@ export function MediaViewer({
     let cancelled = false;
     setUrl(null);
     setError(null);
-    const read = app.fs?.readBinary;
-    if (!read) {
+    const toUrl = app.fs?.url;
+    if (!toUrl) {
       setError("fs:read 권한 없음");
       return;
     }
-    read(ctx.path)
-      .then((d) => {
-        if (!cancelled) setUrl(`data:${d.mime};base64,${d.base64}`);
+    toUrl(ctx.path)
+      .then((u) => {
+        if (!cancelled) setUrl(u);
       })
       .catch((e) => {
         if (!cancelled) setError(String(e));
