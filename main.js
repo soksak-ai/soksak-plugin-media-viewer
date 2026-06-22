@@ -12786,13 +12786,13 @@ function MediaViewer({
     let cancelled = false;
     setUrl(null);
     setError(null);
-    const read = app.fs?.readBinary;
-    if (!read) {
+    const toUrl = app.fs?.url;
+    if (!toUrl) {
       setError("fs:read \uAD8C\uD55C \uC5C6\uC74C");
       return;
     }
-    read(ctx.path).then((d) => {
-      if (!cancelled) setUrl(`data:${d.mime};base64,${d.base64}`);
+    toUrl(ctx.path).then((u) => {
+      if (!cancelled) setUrl(u);
     }).catch((e) => {
       if (!cancelled) setError(String(e));
     });
