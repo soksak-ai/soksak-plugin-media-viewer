@@ -12822,6 +12822,76 @@ function MediaViewer({
   return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "sk-mv", children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("audio", { src: url, controls: true }) });
 }
 
+// src/catalog.ts
+var VIEWERS = [
+  {
+    id: "image",
+    kind: "image",
+    extensions: ["png", "jpg", "jpeg", "gif", "webp", "bmp", "ico", "avif", "apng"],
+    priority: 10
+  },
+  { id: "pdf", kind: "pdf", extensions: ["pdf"], priority: 10 },
+  { id: "video", kind: "video", extensions: ["mp4", "webm", "mov", "m4v", "ogv", "mkv"], priority: 10 },
+  { id: "audio", kind: "audio", extensions: ["mp3", "wav", "ogg", "flac", "m4a", "aac"], priority: 10 }
+];
+function extOf(input) {
+  const s = String(input).trim().toLowerCase();
+  const base = s.split(/[?#]/)[0];
+  const dot = base.lastIndexOf(".");
+  const ext = dot >= 0 ? base.slice(dot + 1) : base;
+  return ext.replace(/^\.+/, "");
+}
+function viewerForExt(ext) {
+  const e = ext.toLowerCase();
+  return VIEWERS.find((v) => v.extensions.includes(e)) ?? null;
+}
+
+// src/commands.ts
+var ID = "soksak-plugin-media-viewer";
+function registerCommands(ctx) {
+  const app = ctx.app;
+  if (!app.commands) return;
+  const reg = (name, spec) => ctx.subscriptions.push(app.commands.register(name, spec));
+  const loc = () => typeof app.locale === "function" ? app.locale() : "en";
+  const msg = (en, ko) => loc() === "ko" ? ko : en;
+  reg("viewers", {
+    description: "List the file viewers this plugin registers \u2014 each with its media kind, the file extensions the core routes to it, and priority. The headless catalog behind what the viewers render.",
+    triggers: { ko: "\uBBF8\uB514\uC5B4 \uBDF0\uC5B4 \uC9C0\uC6D0 \uD655\uC7A5\uC790 \uC885\uB958 \uBAA9\uB85D \uC870\uD68C" },
+    returns: "{ viewers: [{ id, kind, extensions, priority }] }",
+    message: (d) => {
+      const kinds = (d.viewers ?? []).map((v) => v.kind).join(", ");
+      return msg(
+        `${(d.viewers ?? []).length} file viewer(s): ${kinds}.`,
+        `\uD30C\uC77C \uBDF0\uC5B4 ${(d.viewers ?? []).length}\uC885: ${kinds}.`
+      );
+    },
+    examples: [`sok plugin.${ID}.viewers`],
+    hint: (d) => d.ok && (d.viewers ?? []).length > 0 ? [{ cmd: `plugin.${ID}.classify`, why: "\uD2B9\uC815 \uD30C\uC77C\uC774 \uC5B4\uB290 \uBDF0\uC5B4\uB85C \uC5F4\uB9AC\uB294\uC9C0 \uD655\uC778\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4" }] : [],
+    handler: () => ({ ok: true, viewers: VIEWERS })
+  });
+  reg("classify", {
+    description: "Resolve which viewer would handle a file \u2014 pass a path or a bare extension and get the matching viewer id and kind, or null when this plugin does not handle it. Mirrors the core's extension routing without opening a view.",
+    triggers: { ko: "\uD30C\uC77C \uD655\uC7A5\uC790 \uBDF0\uC5B4 \uD310\uBCC4 \uB77C\uC6B0\uD305 \uCC98\uB9AC \uC5EC\uBD80 \uC870\uD68C" },
+    params: {
+      path: { type: "string", description: "File path to classify by its extension" },
+      ext: { type: "string", description: "Bare file extension (leading dot optional) when no path is available" }
+    },
+    returns: "{ ext, handled, viewer: { id, kind } | null }",
+    message: (d) => d.handled ? msg(`.${d.ext} opens in the ${d.viewer.kind} viewer.`, `.${d.ext} \uD30C\uC77C\uC740 ${d.viewer.kind} \uBDF0\uC5B4\uB85C \uC5F4\uB9BD\uB2C8\uB2E4.`) : msg(`No media viewer handles .${d.ext}.`, `.${d.ext} \uD30C\uC77C\uC744 \uCC98\uB9AC\uD558\uB294 \uBBF8\uB514\uC5B4 \uBDF0\uC5B4\uAC00 \uC5C6\uC2B5\uB2C8\uB2E4.`),
+    examples: [
+      `sok plugin.${ID}.classify '{"path":"/Users/me/pic.png"}'`,
+      `sok plugin.${ID}.classify '{"ext":"mp4"}'`
+    ],
+    handler: (p) => {
+      const raw = typeof p.path === "string" && p.path ? p.path : typeof p.ext === "string" ? p.ext : "";
+      if (!raw) return { ok: false, code: "BAD_PARAMS", message: "path or ext required" };
+      const ext = extOf(raw);
+      const v = viewerForExt(ext);
+      return { ok: true, ext, handled: !!v, viewer: v ? { id: v.id, kind: v.kind } : null };
+    }
+  });
+}
+
 // src/styles.ts
 var GLOBAL_CSS = `
 .sk-mv {
@@ -12859,18 +12929,12 @@ function unmountContainer(container) {
   }
   container.replaceChildren();
 }
-var MEDIA = [
-  { id: "image", kind: "image" },
-  { id: "pdf", kind: "pdf" },
-  { id: "video", kind: "video" },
-  { id: "audio", kind: "audio" }
-];
 var plugin_entry_default = {
   activate(ctx) {
     const app = ctx.app;
-    ensureStyle();
+    registerCommands(ctx);
     if (app.ui?.registerFileViewer) {
-      for (const { id, kind } of MEDIA) {
+      for (const { id, kind } of VIEWERS) {
         ctx.subscriptions.push(
           app.ui.registerFileViewer(id, {
             mount(container, fctx) {

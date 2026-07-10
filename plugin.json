@@ -14,7 +14,8 @@
   "entry": "main.js",
   "permissions": [
     "ui",
-    "fs:read"
+    "fs:read",
+    "commands"
   ],
   "contributes": {
     "fileViewers": [
@@ -63,6 +64,22 @@
           "aac"
         ],
         "priority": 10
+      }
+    ],
+    "commands": [
+      {
+        "name": "viewers",
+        "title": {
+          "ko": "파일 뷰어 목록 조회",
+          "en": "List file viewers"
+        }
+      },
+      {
+        "name": "classify",
+        "title": {
+          "ko": "파일 뷰어 판별",
+          "en": "Classify a file to its viewer"
+        }
       }
     ]
   }

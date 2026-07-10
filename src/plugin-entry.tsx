@@ -2,7 +2,9 @@
 // image/pdf/video/audio 파일 뷰어를 app.ui.registerFileViewer 로 등록 → 코어가 확장자 매칭해 마운트.
 // 렌더는 native HTML(img/embed/video/audio) — 읽기 전용. 코드/텍스트는 에디터 플러그인 몫.
 import { createRoot, type Root } from "react-dom/client";
-import { MediaViewer, type MediaKind } from "./media";
+import { MediaViewer } from "./media";
+import { VIEWERS } from "./catalog";
+import { registerCommands } from "./commands";
 import { GLOBAL_CSS } from "./styles";
 import type { FileViewerContext, PluginContext } from "./host";
 
@@ -27,20 +29,15 @@ function unmountContainer(container: HTMLElement): void {
   container.replaceChildren();
 }
 
-const MEDIA: { id: string; kind: MediaKind }[] = [
-  { id: "image", kind: "image" },
-  { id: "pdf", kind: "pdf" },
-  { id: "video", kind: "video" },
-  { id: "audio", kind: "audio" },
-];
-
 export default {
   activate(ctx: PluginContext) {
     const app = ctx.app;
-    ensureStyle();
+
+    // Headless surface first — command registration touches no DOM.
+    registerCommands(ctx);
 
     if (app.ui?.registerFileViewer) {
-      for (const { id, kind } of MEDIA) {
+      for (const { id, kind } of VIEWERS) {
         ctx.subscriptions.push(
           app.ui.registerFileViewer(id, {
             mount(container: HTMLElement, fctx: FileViewerContext) {

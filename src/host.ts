@@ -19,9 +19,36 @@ export interface FileViewerProvider {
   unmount?(container: HTMLElement): void;
 }
 
+export interface ParamSpec {
+  type: string;
+  description?: string;
+  required?: boolean;
+}
+
+export interface CommandHint {
+  cmd: string;
+  why: string;
+}
+
+export interface PluginCommandSpec {
+  description: string;
+  triggers?: Record<string, string>;
+  params?: Record<string, ParamSpec>;
+  returns?: string;
+  examples?: readonly string[];
+  // Compose a one-line result utterance from the success data (handler return). Core message protocol.
+  message?: (data: any) => string;
+  /** Up to 3 suggested next commands. */
+  hint?: (data: any, ctx: PluginContext) => CommandHint[];
+  handler: (params: Record<string, unknown>) => Promise<object> | object;
+}
+
 export interface PluginApi {
   pluginId: string;
   locale: () => string;
+  commands?: {
+    register: (name: string, spec: PluginCommandSpec) => Disposable;
+  };
   events: {
     on: (event: string, fn: (payload: unknown) => void) => Disposable;
   };

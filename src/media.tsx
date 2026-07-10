@@ -4,8 +4,9 @@
 import { useEffect, useState } from "react";
 import { t as translate } from "./i18n";
 import type { FileViewerContext, PluginApi } from "./host";
+import type { MediaKind } from "./catalog";
 
-export type MediaKind = "image" | "pdf" | "video" | "audio";
+export type { MediaKind };
 
 export function MediaViewer({
   app,
