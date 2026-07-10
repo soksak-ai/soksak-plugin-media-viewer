@@ -9,8 +9,9 @@
     "dev": "node build.mjs --watch",
     "typecheck": "tsc --noEmit",
     "doctor": "soksak-plugin-doctor",
+    "test": "node --test",
     "prepublishOnly": "npm run build && npm run doctor",
-    "test-unit": "npm run typecheck && npm run build"
+    "test-unit": "npm run typecheck && npm run build && npm test"
   },
   "dependencies": {
     "react": "^19.1.0",
