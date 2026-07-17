@@ -2,13 +2,12 @@
   "spec": "soksak-spec-plugin@0.0.1",
   "id": "soksak-plugin-media-viewer",
   "name": {
-    "ko": "미디어 뷰어",
+    "ko": "\ubbf8\ub514\uc5b4 \ubdf0\uc5b4",
     "en": "Media Viewer"
   },
   "version": "0.0.1",
-  "repo": "https://github.com/soksak-ai/soksak-plugin-media-viewer.git",
   "description": {
-    "ko": "이미지·PDF·영상·오디오 파일을 콘텐츠로 표시하는 뷰어. soksak 파일 뷰어로 등록(코어가 확장자로 라우팅).",
+    "ko": "\uc774\ubbf8\uc9c0\u00b7PDF\u00b7\uc601\uc0c1\u00b7\uc624\ub514\uc624 \ud30c\uc77c\uc744 \ucf58\ud150\uce20\ub85c \ud45c\uc2dc\ud558\ub294 \ubdf0\uc5b4. soksak \ud30c\uc77c \ubdf0\uc5b4\ub85c \ub4f1\ub85d(\ucf54\uc5b4\uac00 \ud655\uc7a5\uc790\ub85c \ub77c\uc6b0\ud305).",
     "en": "Viewers for image, PDF, video, and audio files. Registers as soksak file viewers (the core routes by extension)."
   },
   "entry": "main.js",
@@ -70,14 +69,14 @@
       {
         "name": "viewers",
         "title": {
-          "ko": "파일 뷰어 목록 조회",
+          "ko": "\ud30c\uc77c \ubdf0\uc5b4 \ubaa9\ub85d \uc870\ud68c",
           "en": "List file viewers"
         }
       },
       {
         "name": "classify",
         "title": {
-          "ko": "파일 뷰어 판별",
+          "ko": "\ud30c\uc77c \ubdf0\uc5b4 \ud310\ubcc4",
           "en": "Classify a file to its viewer"
         }
       }
