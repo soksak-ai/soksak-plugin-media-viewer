@@ -11,6 +11,12 @@
     "en": "Viewers for image, PDF, video, and audio files. Registers as soksak file viewers (the core routes by extension)."
   },
   "entry": "main.js",
+  "consumes": [
+    {
+      "id": "soksak-spec-plugin-sidebar-file-tree",
+      "range": "^0.0.1"
+    }
+  ],
   "permissions": [
     "ui",
     "fs:read",
@@ -31,14 +37,34 @@
           "avif",
           "apng"
         ],
-        "priority": 10
+        "priority": 10,
+        "sidebar": {
+          "left": [
+            {
+              "contract": "soksak-spec-plugin-sidebar-file-tree",
+              "range": "^0.0.1",
+              "view": "tree",
+              "instance": "shared"
+            }
+          ]
+        }
       },
       {
         "id": "pdf",
         "extensions": [
           "pdf"
         ],
-        "priority": 10
+        "priority": 10,
+        "sidebar": {
+          "left": [
+            {
+              "contract": "soksak-spec-plugin-sidebar-file-tree",
+              "range": "^0.0.1",
+              "view": "tree",
+              "instance": "shared"
+            }
+          ]
+        }
       },
       {
         "id": "video",
@@ -50,7 +76,17 @@
           "ogv",
           "mkv"
         ],
-        "priority": 10
+        "priority": 10,
+        "sidebar": {
+          "left": [
+            {
+              "contract": "soksak-spec-plugin-sidebar-file-tree",
+              "range": "^0.0.1",
+              "view": "tree",
+              "instance": "shared"
+            }
+          ]
+        }
       },
       {
         "id": "audio",
@@ -62,7 +98,17 @@
           "m4a",
           "aac"
         ],
-        "priority": 10
+        "priority": 10,
+        "sidebar": {
+          "left": [
+            {
+              "contract": "soksak-spec-plugin-sidebar-file-tree",
+              "range": "^0.0.1",
+              "view": "tree",
+              "instance": "shared"
+            }
+          ]
+        }
       }
     ],
     "commands": [
